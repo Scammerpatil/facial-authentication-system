@@ -19,12 +19,9 @@ const Login = () => {
       toast.promise(res, {
         loading: "Signing in...",
         success: (data: AxiosResponse) => {
-          if (data.data.success) {
-            router.push(data.data.route);
-            setUser(data.data.user);
-            localStorage.setItem("user", JSON.stringify(data.data.user));
-            return data.data.message;
-          }
+          router.push(data.data.route);
+          setUser(data.data.user);
+          return data.data.message;
         },
         error: (error: any) => {
           return error.response?.data?.message || "Failed to login";

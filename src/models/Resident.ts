@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
-const UserSchema = new Schema({
+const ResidentSchema = new Schema({
   name: {
     type: String,
     required: true,
@@ -17,11 +17,12 @@ const UserSchema = new Schema({
     type: String,
     required: true,
   },
-  password: {
+  address: {
     type: String,
     required: true,
   },
 });
 
-const User = mongoose.models.User || mongoose.model("User", UserSchema);
-export default User;
+const Resident =
+  mongoose.models.Resident || mongoose.model("Resident", ResidentSchema);
+export default Resident;

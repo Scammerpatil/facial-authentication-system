@@ -1,14 +1,25 @@
 "use client";
 import "../globals.css";
 import { Toaster } from "react-hot-toast";
-import Header from "@/components/Header";
-import { AuthProvider } from "@/context/AuthProvider";
-
+import { useEffect } from "react";
+import axios from "axios";
+import SideNav from "./SideNav";
+import { AuthProvider, useAuth } from "@/context/AuthProvider";
 const Component = ({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) => {
+  const { setUser } = useAuth();
+  useEffect(() => {
+    const fetchUser = async () => {
+      const response = await axios.get("/api/auth/verifytoken");
+      if (response.data) {
+        setUser(response.data.user);
+      }
+    };
+    fetchUser();
+  }, []);
   return (
     <html lang="en">
       <head>
@@ -20,8 +31,7 @@ const Component = ({
       </head>
       <body className={`antialiased`}>
         <Toaster />
-        <Header />
-        {children}
+        <SideNav>{children}</SideNav>
       </body>
     </html>
   );

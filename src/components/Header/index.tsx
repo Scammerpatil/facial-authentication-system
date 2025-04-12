@@ -15,18 +15,16 @@ const Header = () => {
                 <span className="text-primary font-extrabold text-xl">
                   Face
                 </span>
-                <span className="text-accent font-semibold text-xl">
-                  Shield
-                </span>
+                <span className="text-accent font-semibold text-xl">Entry</span>
               </div>
               <hr className="w-full border border-base-content" />
               <span className="text-sm text-base-content/70 italic">
-                Unlock with Confidence - Your Face, Your Key!
+                Your Face is the Key.
               </span>
             </div>
           </Link>
         </div>
-        <div className="navbar-center hidden lg:flex">
+        {/* <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1 text-base text-base-content">
             <li>
               <Link href="/about">About</Link>
@@ -38,14 +36,11 @@ const Header = () => {
               <Link href="/contact">Contact</Link>
             </li>
           </ul>
-        </div>
+        </div> */}
 
         <div className="navbar-end space-x-3">
           <Link href="/login" className="btn btn-accent">
             Login
-          </Link>
-          <Link href="/signup" className="btn btn-accent">
-            Sign Up
           </Link>
           <ThemeToggler />
         </div>

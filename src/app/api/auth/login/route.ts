@@ -2,7 +2,7 @@ import bcryptjs from "bcryptjs";
 import { NextRequest, NextResponse } from "next/server";
 import dbConfig from "@/middlewares/db.config";
 import jwt from "jsonwebtoken";
-import User from "@/models/User";
+import User from "@/models/Resident";
 import { exec } from "child_process";
 import { promisify } from "util";
 
@@ -30,52 +30,28 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // User login logic
-  const user = await User.findOne({ email: formData.email });
-  if (!user) {
-    return NextResponse.json(
-      { message: "User not found", success: false },
-      { status: 400 }
-    );
-  }
-
-  const { stdout, stderr } = await execAsync(
-    `py -3.12 python/login.py ${formData.email}`
-  );
-  if (stderr) {
-    console.error(stderr);
-    return NextResponse.json(
-      { message: "Error creating user" },
-      { status: 500 }
-    );
-  }
-
-  const isPasswordValid = await bcryptjs.compare(
-    formData.password,
-    user.password
-  );
-
-  if (isPasswordValid) {
+  if (
+    formData.email === process.env.ADMIN_EMAIL &&
+    formData.password === process.env.ADMIN_PASSWORD
+  ) {
     const data = {
-      id: user._id,
-      role: "user",
-      email: user.email,
-      name: user.name,
-      profilImage: user.profileImage,
-      isVerified: user.isVerified,
+      id: process.env.ADMIN_ID,
+      role: "admin",
+      profileImage: process.env.ADMIN_PROFILE_IMAGE,
+      email: formData.email,
+      name: "Admin",
+      isVerified: true,
     };
     const token = generateToken(data);
     const response = NextResponse.json({
       message: "Login Success",
-      success: true,
-      route: `/dashboard`,
-      user,
+      route: `/admin/dashboard`,
     });
     setTokenCookie(response, token);
     return response;
   } else {
     return NextResponse.json(
-      { message: "Invalid Credentials", success: false },
+      { message: "Invalid Credentials" },
       { status: 400 }
     );
   }

@@ -1,6 +1,5 @@
 import dbConfig from "@/middlewares/db.config";
-import User from "@/models/User";
-import { User as UserType } from "@/types/User";
+import User from "@/models/Resident";
 import jwt from "jsonwebtoken";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -19,14 +18,7 @@ export async function GET(req: NextRequest) {
     if (!data) {
       return NextResponse.json({ error: "Invalid token" });
     }
-    if (data.id === "admin") {
-      return NextResponse.json({ user: data, status: 200 });
-    }
-    const user = await User.findOne({ email: data.email });
-    if (!user) {
-      return NextResponse.json({ error: "User not found" });
-    }
-    return NextResponse.json({ user, status: 200 });
+    return NextResponse.json({ user: data, status: 200 });
   } catch (err) {
     console.log(err);
     return NextResponse.json({ err }, { status: 401 });

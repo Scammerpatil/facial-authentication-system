@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import dbConfig from "@/middlewares/db.config";
-import User from "@/models/User";
+import User from "@/models/Resident";
 import { exec } from "child_process";
 import { promisify } from "util";
 

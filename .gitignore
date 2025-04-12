@@ -39,3 +39,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+
+python/ResidentImages
+python/encodings.py
+
+public/profileImage
+public/visitor_images
