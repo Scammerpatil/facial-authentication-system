@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>New Visitor Entry Alert</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 600px;
+      margin: auto;
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    .header {
+      background-color: #2c3e50;
+      padding: 20px;
+      text-align: center;
+      color: white;
+    }
+
+    .header img {
+      width: 100px;
+      margin-bottom: 10px;
+    }
+
+    .content {
+      padding: 20px;
+      color: #333;
+    }
+
+    .visitor-info {
+      margin-top: 20px;
+      border-top: 1px solid #ddd;
+      padding-top: 20px;
+    }
+
+    .visitor-info p {
+      margin: 8px 0;
+      font-size: 15px;
+    }
+
+    .footer {
+      background-color: #f1f1f1;
+      padding: 20px;
+      text-align: center;
+      font-size: 12px;
+      color: #777;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="header">
+      <img src="https://as2.ftcdn.net/jpg/02/56/98/57/1000_F_256985793_znZNSmrFwupDRO5nlTVZZYTCCBi5AWpz.jpg"
+        alt="NovaCops Logo" />
+      <h2>Visitor Entry Alert</h2>
+    </div>
+    <div class="content">
+      <p>Dear Admin,</p>
+      <p>A new visitor has just entered your society premises. Below are the visitor details:</p>
+
+      <div class="visitor-info">
+        <p><strong>Name:</strong>
+          <%= visitorData.name %>
+        </p>
+        <p><strong>Contact:</strong>
+          <%= visitorData.contact %>
+        </p>
+        <p><strong>Email:</strong>
+          <%= visitorData.email %>
+        </p>
+        <p><strong>Purpose of Visit:</strong>
+          <%= visitorData.purposeOfVisit %>
+        </p>
+        <p><strong>ID Type:</strong>
+          <%= visitorData.visitorId %>
+        </p>
+        <p><strong>ID Number:</strong>
+          <%= visitorData.visitorIdNumber %>
+        </p>
+      </div>
+
+      <p>If this entry seems suspicious, please review immediately on the admin panel.</p>
+    </div>
+    <div class="footer">
+      <p>Made with ♥ by NovaCops</p>
+    </div>
+  </div>
+</body>
+
+</html>

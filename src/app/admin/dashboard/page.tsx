@@ -1,4 +1,5 @@
 "use client";
+import { Logs } from "@/types/Logs";
 import {
   IconUserCheck,
   IconUserX,
@@ -7,8 +8,30 @@ import {
   IconCamera,
 } from "@tabler/icons-react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export default function Dashboard() {
+  const [dashboard, setDashboard] = useState({
+    totalEntries: 0,
+    registeredEntries: 0,
+    unregisteredEntries: 0,
+    latestEntry: "",
+    liveFeed: "",
+    recentLogs: [],
+  });
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("/api/dashboard");
+        const data = await response.json();
+        setDashboard(data);
+      } catch (error) {
+        console.error("Error fetching dashboard data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
   return (
     <>
       <h1 className="text-3xl font-bold mb-6 text-center uppercase">
@@ -22,7 +45,7 @@ export default function Dashboard() {
             <IconUsers size={40} />
           </div>
           <div className="stat-title">Total Entries</div>
-          <div className="stat-value text-info">2,431</div>
+          <div className="stat-value text-info">{dashboard.totalEntries}</div>
           <div className="stat-desc">+12% this week</div>
         </div>
 
@@ -31,7 +54,9 @@ export default function Dashboard() {
             <IconUserCheck size={40} />
           </div>
           <div className="stat-title">Registered Entries</div>
-          <div className="stat-value text-success">1,920</div>
+          <div className="stat-value text-success">
+            {dashboard.registeredEntries}
+          </div>
           <div className="stat-desc">Verified Residents</div>
         </div>
 
@@ -40,7 +65,9 @@ export default function Dashboard() {
             <IconUserX size={40} />
           </div>
           <div className="stat-title">Unregistered Entries</div>
-          <div className="stat-value text-warning">511</div>
+          <div className="stat-value text-warning">
+            {dashboard.unregisteredEntries}
+          </div>
           <div className="stat-desc">New Visitors</div>
         </div>
 
@@ -49,7 +76,7 @@ export default function Dashboard() {
             <IconClock size={40} />
           </div>
           <div className="stat-title">Latest Entry</div>
-          <div className="stat-value text-accent">2 mins ago</div>
+          <div className="stat-value text-accent">{dashboard.latestEntry}</div>
           <div className="stat-desc">Auto-logged entry</div>
         </div>
       </div>
@@ -62,8 +89,14 @@ export default function Dashboard() {
             <h2 className="text-2xl font-semibold">Live Camera Preview</h2>
             <IconCamera size={28} className="text-accent" />
           </div>
-          <div className="aspect-video bg-black rounded-xl flex items-center justify-center text-white">
-            Live feed here (stream/cam component)
+          <div className="aspect-video rounded-xl flex items-center justify-center">
+            <video
+              src="/video.mp4"
+              autoPlay={true}
+              loop
+              controls={false}
+              muted
+            />
           </div>
         </div>
 
@@ -88,25 +121,37 @@ export default function Dashboard() {
               </tr>
             </thead>
             <tbody>
-              {/* Example logs */}
-              <tr>
-                <td>1</td>
-                <td>Riya Sharma</td>
-                <td className="text-green-500 font-semibold">Yes</td>
-                <td>Today, 9:15 AM</td>
-              </tr>
-              <tr>
-                <td>2</td>
-                <td>Unknown Visitor</td>
-                <td className="text-red-500 font-semibold">No</td>
-                <td>Today, 9:10 AM</td>
-              </tr>
-              <tr>
-                <td>3</td>
-                <td>Arjun Mehta</td>
-                <td className="text-green-500 font-semibold">Yes</td>
-                <td>Today, 8:54 AM</td>
-              </tr>
+              {dashboard.recentLogs.length > 0 ? (
+                dashboard.recentLogs.map((log: Logs, index) => {
+                  const isResident = log.isRegistered;
+                  const user = isResident ? log.resident : log.visitor;
+                  return (
+                    <tr key={index}>
+                      <td>{index + 1}</td>
+                      <td>{user?.name}</td>
+                      <td
+                        className={`${
+                          log.isRegistered ? "text-green-500" : "text-red-500"
+                        } font-semibold text-center`}
+                      >
+                        {log.isRegistered ? "Yes" : "No"}
+                      </td>
+                      <td>
+                        {new Date(log.entryTime).toLocaleString("en-IN", {
+                          dateStyle: "medium",
+                          timeStyle: "short",
+                        })}
+                      </td>
+                    </tr>
+                  );
+                })
+              ) : (
+                <tr>
+                  <td colSpan={4} className="text-center">
+                    No recent logs available.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
