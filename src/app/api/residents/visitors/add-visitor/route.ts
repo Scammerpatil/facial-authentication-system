@@ -5,6 +5,7 @@ import Visitor from "@/models/Visitor";
 import Log from "@/models/Logs";
 import ejs from "ejs";
 import fs from "fs";
+import Resident from "@/models/Resident";
 
 dbConfig();
 export async function POST(req: NextRequest) {
@@ -30,6 +31,8 @@ export async function POST(req: NextRequest) {
       profileImage: `/visitor_images/${imageName}`,
       visitorId: formData.visitorId,
       visitorIdNumber: formData.visitorIdNumber,
+      flatYourAreVisiting: formData.flatYourAreVisiting,
+      approved: false,
     });
     await visitorData.save();
     const logData = new Log({
@@ -54,6 +57,35 @@ export async function POST(req: NextRequest) {
       html: ejs.render(template, { visitorData, imgSrc }),
     };
     transporter.sendMail(mailOptions, (err, info) => {
+      if (err) {
+        console.error(err);
+      } else {
+        console.log("Email sent:", info.response);
+      }
+    });
+    // Send Mail to The Resident
+    const resident = await Resident.findById({
+      _id: formData.flatYourAreVisiting,
+    });
+    const baseUrl = req.nextUrl.origin;
+    const approveUrl = `${baseUrl}/api/residents/visitors/verify?id=${visitorData._id}&status=true`;
+    const disapproveUrl = `${baseUrl}/api/residents/visitors/verify?id=${visitorData._id}&status=false`;
+    const residentTemplate = fs.readFileSync(
+      "./src/helper/residentTemplate.ejs",
+      "utf-8"
+    );
+    const residentMailOptions = {
+      from: "NovaCops | No Reply <",
+      to: resident.email,
+      subject: "New Visitor Registered",
+      html: ejs.render(residentTemplate, {
+        visitorData,
+        imgSrc,
+        approveUrl,
+        disapproveUrl,
+      }),
+    };
+    transporter.sendMail(residentMailOptions, (err, info) => {
       if (err) {
         console.error(err);
       } else {

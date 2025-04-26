@@ -10,6 +10,11 @@ const VisitorSchema = new Schema(
       type: String,
       required: true,
     },
+    flatYourAreVisiting: {
+      type: Schema.Types.ObjectId,
+      ref: "Resident",
+      required: true,
+    },
     email: {
       type: String,
       required: true,
@@ -30,6 +35,10 @@ const VisitorSchema = new Schema(
     visitorIdNumber: {
       type: String,
       required: true,
+    },
+    approved: {
+      type: Boolean,
+      default: false,
     },
   },
   { timestamps: true }

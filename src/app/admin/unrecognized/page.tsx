@@ -34,10 +34,12 @@ const UnrecognizedPage = () => {
               <th>Name</th>
               <th>Contact</th>
               <th>Email</th>
+              <th>Visiting Resident</th>
               <th>Purpose of Visit</th>
               <th>Visitor ID</th>
               <th>Visitor ID Number</th>
               <th>Captured At</th>
+              <th>Approved</th>
             </tr>
           </thead>
           <tbody>
@@ -62,6 +64,10 @@ const UnrecognizedPage = () => {
                   </td>
                   <td>{visitor.contact}</td>
                   <td>{visitor.email}</td>
+                  <td>
+                    {visitor.flatYourAreVisiting?.name} -{" "}
+                    {visitor.flatYourAreVisiting?.address}
+                  </td>
                   <td>{visitor.purposeOfVisit}</td>
                   <td>{visitor.visitorId}</td>
                   <td>{visitor.visitorIdNumber}</td>
@@ -71,11 +77,12 @@ const UnrecognizedPage = () => {
                       timeStyle: "short",
                     })}
                   </td>
+                  <td>{visitor.approved ? "Yes" : "No"}</td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan={6} className="text-center py-4">
+                <td colSpan={10} className="text-center py-4">
                   No unrecognized visitors found.
                 </td>
               </tr>

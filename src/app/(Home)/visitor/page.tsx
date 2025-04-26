@@ -1,6 +1,7 @@
 "use client";
+import { Resident } from "@/types/Resident";
 import axios from "axios";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import Webcam from "react-webcam";
 
@@ -12,6 +13,9 @@ const videoConstraints = {
 
 export default function VisitorVerifyForm() {
   const webcamRef = useRef(null);
+  const [flatYourAreVisiting, setFlatYourAreVisiting] = useState<Resident[]>(
+    []
+  );
   const [imgSrc, setImgSrc] = useState(null);
   const [formData, setFormData] = useState({
     name: "",
@@ -19,10 +23,21 @@ export default function VisitorVerifyForm() {
     email: "",
     purposeOfVisit: "",
     profileImage: "",
+    flatYourAreVisiting: "",
     visitorId: "",
     visitorIdNumber: "",
   });
-
+  useEffect(() => {
+    const fetchFlats = async () => {
+      try {
+        const response = await axios.get("/api/residents");
+        setFlatYourAreVisiting(response.data);
+      } catch (error) {
+        console.error("Error fetching flats:", error);
+      }
+    };
+    fetchFlats();
+  }, []);
   const captureImage = () => {
     const imageSrc = webcamRef.current.getScreenshot();
     setImgSrc(imageSrc);
@@ -36,6 +51,7 @@ export default function VisitorVerifyForm() {
       !formData.email ||
       !formData.purposeOfVisit ||
       !formData.visitorId ||
+      !formData.flatYourAreVisiting ||
       !formData.visitorIdNumber
     ) {
       toast.error("Please fill in all required fields!");
@@ -65,6 +81,7 @@ export default function VisitorVerifyForm() {
             purposeOfVisit: "",
             profileImage: "",
             visitorId: "",
+            flatYourAreVisiting: "",
             visitorIdNumber: "",
           });
           setImgSrc(null);
@@ -153,6 +170,26 @@ export default function VisitorVerifyForm() {
               <option value="Passport">Passport</option>
               <option value="Driving License">Driving License</option>
               <option value="Voter ID">Voter ID</option>
+            </select>
+
+            <select
+              className="select select-primary w-full"
+              value={formData.flatYourAreVisiting}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  flatYourAreVisiting: e.target.value,
+                })
+              }
+            >
+              <option value="" disabled>
+                Select Flat You Are Visiting
+              </option>
+              {flatYourAreVisiting.map((flat) => (
+                <option key={flat._id} value={flat._id}>
+                  {flat.name} - {flat.address}
+                </option>
+              ))}
             </select>
 
             <input

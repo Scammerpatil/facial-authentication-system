@@ -1,3 +1,5 @@
+import { Resident } from "./Resident";
+
 export interface Visitor {
   name: string;
   contact: string;
@@ -6,5 +8,7 @@ export interface Visitor {
   profileImage: string;
   visitorId: string;
   visitorIdNumber: string;
+  flatYourAreVisiting: Resident;
+  approved: boolean;
   createdAt: Date;
 }
